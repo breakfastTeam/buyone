@@ -1,0 +1,32 @@
+@(eventUpdateForm: Form[forms.sample.EventUpdateData], id :Int)(implicit flash: Flash, messages: Messages)
+
+@import BootstrapHelper._
+
+@main("EventUpdate", eventUpdateForm) {
+  @helper.form(action = controllers.sample.routes.EventUpdate.update(id), 'role -> "form", 'class -> "form-horizontal"){
+    <div class="container">
+      <fieldset>
+        <legend>EventUpdate</legend>
+        <div class="row">
+          <div class="col-md-6">
+            <input type = "hidden" id="id" name ="id" value="@eventUpdateForm("id").value">
+            @helper.inputText(eventUpdateForm("eventId"))
+            @helper.inputText(eventUpdateForm("eventNm"))
+            @helper.inputDate(eventUpdateForm("eventDate"))
+            @helper.inputText(eventUpdateForm("homepage"))
+          </div>
+          <div class="col-md-6">
+            @helper.inputText(eventUpdateForm("place"))
+            @helper.inputText(eventUpdateForm("capacity"))
+            @helper.inputText(eventUpdateForm("eventType"))
+            @helper.inputText(eventUpdateForm("content"))
+            @helper.inputText(eventUpdateForm("publicStatus"))
+          </div>
+        </div>
+        <div align = "right">
+        <input type="submit" value="Update" class="btn btn-info">
+        </div>
+      </fieldset>
+    </div>
+  }
+}

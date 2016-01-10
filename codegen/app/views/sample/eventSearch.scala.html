@@ -1,0 +1,76 @@
+@(eventSearchForm: Form[forms.sample.EventSearchData], events: Seq[models.Tables.EventRow])(implicit flash: Flash, messages: Messages)
+
+@import BootstrapHelper._
+
+@main("EventSearch", eventSearchForm) {
+  @helper.form(action = controllers.sample.routes.EventSearch.search(), 'role -> "form", 'class -> "form-horizontal"){
+    <div class="container">
+      <fieldset>
+        <legend>EventSearch</legend>
+        <div class="row">
+          <div class="col-md-6">
+            @helper.inputText(eventSearchForm("eventId"))
+            @helper.inputText(eventSearchForm("eventNm"))
+            @helper.inputDate(eventSearchForm("eventDate"))
+            @helper.inputText(eventSearchForm("homepage"))
+          </div>
+          <div class="col-md-6">
+            @helper.inputText(eventSearchForm("place"))
+            @helper.inputText(eventSearchForm("capacity"))
+            @helper.inputText(eventSearchForm("eventType"))
+            @helper.inputText(eventSearchForm("content"))
+          </div>
+          <div class="col-md-6">
+            @helper.inputText(eventSearchForm("publicStatus"))
+        </div>
+        <div align = "right">
+          <input type="submit" value="Search" class="btn btn-info">
+        </div>
+      </fieldset>
+
+      @if(events) {
+      <fieldset>
+        <legend>results</legend>
+        <div class="table-responsive">
+        <table class="table table-striped table-hover table-condensed">
+          <thead>
+            <tr>
+              <th>id</th>
+              <th>eventId</th>
+              <th>eventNm</th>
+              <th>eventDate</th>
+              <th>homepage</th>
+              <th>place</th>
+              <th>capacity</th>
+              <th>eventType</th>
+              <th>content</th>
+              <th>publicStatus</th>
+              <th>action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for((event) <- events){
+              <tr>
+                <td>@event.id</td>
+                <td>@event.eventId</td>
+                <td>@event.eventNm</td>
+                <td>@event.eventDate</td>
+                <td>@event.homepage</td>
+                <td>@event.place</td>
+                <td>@event.capacity</td>
+                <td>@event.eventType</td>
+                <td>@event.content</td>
+                <td>@event.publicStatus</td>
+                <td><a href="@controllers.sample.routes.EventUpdate.index(event.id)"><i class="glyphicon glyphicon-edit"></i></a>
+          <a href="@controllers.sample.routes.EventSearch.delete(event.id)"><i class="glyphicon glyphicon-remove"></i></a>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      </fieldset>
+      }
+    </div>
+  }
+}

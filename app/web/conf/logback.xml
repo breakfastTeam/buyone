@@ -1,0 +1,86 @@
+<configuration>
+    <property resource="application.conf" />
+    <property resource="application-local.conf" />
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <prudent>true</prudent>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>${log.level}</level>
+        </filter>
+        <filter class="com.xingren.common.logging.IgnoreExceptionFilter">
+            <exceptionClassName>java.nio.channels.ClosedChannelException</exceptionClassName>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${log.path}/admin.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 100MB -->
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d- [%thread] %-5level %logger{35} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="ASYNCFILE" class="ch.qos.logback.classic.AsyncAppender">
+        <queueSize>500</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+        <appender-ref ref="FILE" />
+    </appender>
+
+    <appender name="ERR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <prudent>true</prudent>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <filter class="com.xingren.common.logging.IgnoreExceptionFilter">
+            <exceptionClassName>java.nio.channels.ClosedChannelException</exceptionClassName>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${log.path}/admin-err.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 100MB -->
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd/HH:mm:ss.SSS} %level [%thread] %logger{20}.%method:%line - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>${log.level}</level>
+        </filter>
+        <filter class="com.xingren.common.logging.IgnoreExceptionFilter">
+            <exceptionClassName>java.nio.channels.ClosedChannelException</exceptionClassName>
+        </filter>
+        <encoder>
+            <pattern>%d{HH:mm:ss} %level [%thread] %logger{20}.%method:%line - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <logger name="com.jolbox.bonecp.PreparedStatementHandle" level="DEBUG" />
+
+    <logger name="org.apache.http" level="INFO" />
+    <logger name="org.jboss.netty" level="INFO" />
+    <logger name="play.core.server.netty" level="OFF" />
+    <logger name="com.ning.http" level="INFO" />
+    <logger name="sun.net.www" level="INFO" />
+
+    <root level="${log.level}">
+        <appender-ref ref="ASYNCFILE" />
+        <appender-ref ref="ERR" />
+        <appender-ref ref="STDOUT" />
+    </root>
+
+</configuration>
